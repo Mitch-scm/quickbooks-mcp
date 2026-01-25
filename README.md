@@ -2,6 +2,23 @@
 
 A Model Context Protocol (MCP) server that provides Claude with access to QuickBooks Online data. Enables querying customers, invoices, accounts, transactions, and more through natural language.
 
+## How This Differs from Intuit's Official Server
+
+Intuit provides an [official MCP server](https://github.com/intuit/quickbooks-online-mcp-server) for learning and experimentation. This community server is designed for **production use** with additional features:
+
+| Feature | Intuit Official | This Server |
+|---------|-----------------|-------------|
+| Environment | Sandbox only | Production + Sandbox |
+| Credential Storage | Local `.env` file | Local file or AWS Secrets Manager |
+| Financial Reports | No | P&L, Balance Sheet, Trial Balance |
+| Query Style | Entity-specific tools | Generic SQL-like queries |
+| Distribution | Clone from GitHub | NPM package (`npx quickbooks-mcp`) |
+| Multi-user Support | No | Yes (via AWS mode) |
+
+**Use Intuit's server** if you're learning the QuickBooks API in a sandbox environment.
+
+**Use this server** if you need production access, financial reports, or shared credential management.
+
 ## Prerequisites
 
 - **QuickBooks Developer Account**: Register at [developer.intuit.com](https://developer.intuit.com)
@@ -81,7 +98,7 @@ Follow the same steps as Option 1 above.
 ### 2. Clone and Build
 
 ```bash
-git clone https://github.com/your-org/quickbooks-mcp.git
+git clone https://github.com/laf-rge/quickbooks-mcp.git
 cd quickbooks-mcp
 npm install
 npm run build
