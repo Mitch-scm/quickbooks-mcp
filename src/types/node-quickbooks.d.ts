@@ -59,6 +59,7 @@ declare module "node-quickbooks" {
     createJournalEntry(journalEntry: object, callback: Callback<unknown>): void;
     createPurchase(purchase: object, callback: Callback<unknown>): void;
     createSalesReceipt(salesReceipt: object, callback: Callback<unknown>): void;
+    createInvoice(invoice: object, callback: Callback<unknown>): void;
     createCustomer(customer: object, callback: Callback<unknown>): void;
 
     // Get methods (single entity by ID)
@@ -66,6 +67,7 @@ declare module "node-quickbooks" {
     getBill(id: string, callback: Callback<unknown>): void;
     getPurchase(id: string, callback: Callback<unknown>): void;
     getSalesReceipt(id: string, callback: Callback<unknown>): void;
+    getInvoice(id: string, callback: Callback<unknown>): void;
     getDeposit(id: string, callback: Callback<unknown>): void;
     getCustomer(id: string, callback: Callback<unknown>): void;
 
@@ -74,6 +76,7 @@ declare module "node-quickbooks" {
     updateBill(bill: object, callback: Callback<unknown>): void;
     updatePurchase(purchase: object, callback: Callback<unknown>): void;
     updateSalesReceipt(salesReceipt: object, callback: Callback<unknown>): void;
+    updateInvoice(invoice: object, callback: Callback<unknown>): void;
     updateDeposit(deposit: object, callback: Callback<unknown>): void;
     updateCustomer(customer: object, callback: Callback<unknown>): void;
 
