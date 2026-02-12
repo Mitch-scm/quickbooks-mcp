@@ -80,6 +80,14 @@ declare module "node-quickbooks" {
     updateDeposit(deposit: object, callback: Callback<unknown>): void;
     updateCustomer(customer: object, callback: Callback<unknown>): void;
 
+    // Delete methods
+    deleteJournalEntry(idOrEntity: object | string, callback: Callback<unknown>): void;
+    deleteBill(idOrEntity: object | string, callback: Callback<unknown>): void;
+    deleteInvoice(idOrEntity: object | string, callback: Callback<unknown>): void;
+    deleteDeposit(idOrEntity: object | string, callback: Callback<unknown>): void;
+    deleteSalesReceipt(idOrEntity: object | string, callback: Callback<unknown>): void;
+    deletePurchase(idOrEntity: object | string, callback: Callback<unknown>): void;
+
     // Reports
     reportBalanceSheet(options: object, callback: Callback<unknown>): void;
     reportProfitAndLoss(options: object, callback: Callback<unknown>): void;

@@ -1158,6 +1158,29 @@ export const toolDefinitions = [
     },
   },
   {
+    name: "delete_entity",
+    description: "Permanently delete a QuickBooks transaction. Supports journal entries, bills, invoices, deposits, sales receipts, and expenses. Uses a two-step flow: first call previews what will be deleted, second call with confirm=true executes the deletion. Note: Customers cannot be deleted — use edit_customer with active=false to deactivate instead.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        entity_type: {
+          type: "string",
+          enum: ["journal_entry", "bill", "invoice", "deposit", "sales_receipt", "expense"],
+          description: "The type of entity to delete.",
+        },
+        id: {
+          type: "string",
+          description: "The entity ID to delete.",
+        },
+        confirm: {
+          type: "boolean",
+          description: "If true, execute the deletion. If false (default), show a preview of what will be deleted.",
+        },
+      },
+      required: ["entity_type", "id"],
+    },
+  },
+  {
     name: "create_customer",
     description: "Create a customer or sub-customer. Accepts name parts, contact info, addresses, and hierarchy settings. Use parent_ref to create sub-customers or jobs. Returns customer details and a link to view in QuickBooks.",
     inputSchema: {

@@ -31,6 +31,7 @@ import {
   handleCreateCustomer,
   handleGetCustomer,
   handleEditCustomer,
+  handleDeleteEntity,
   handleAuthenticate,
 } from "./handlers/index.js";
 
@@ -71,6 +72,7 @@ toolHandlers.set("edit_deposit", (client, args) => handleEditDeposit(client, arg
 toolHandlers.set("create_customer", (client, args) => handleCreateCustomer(client, args as Parameters<typeof handleCreateCustomer>[1]));
 toolHandlers.set("get_customer", (client, args) => handleGetCustomer(client, args as { id: string }));
 toolHandlers.set("edit_customer", (client, args) => handleEditCustomer(client, args as Parameters<typeof handleEditCustomer>[1]));
+toolHandlers.set("delete_entity", (client, args) => handleDeleteEntity(client, args as Parameters<typeof handleDeleteEntity>[1]));
 
 // Execute tool with auth retry logic
 export async function executeTool(

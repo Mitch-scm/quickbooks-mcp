@@ -290,6 +290,8 @@ The server needs these AWS permissions:
 | `create_deposit` | Create a bank deposit |
 | `get_deposit` | Fetch a deposit by ID |
 | `edit_deposit` | Modify an existing deposit |
+| **Delete** | |
+| `delete_entity` | Delete any transaction (journal entry, bill, invoice, deposit, sales receipt, expense) |
 
 ---
 
