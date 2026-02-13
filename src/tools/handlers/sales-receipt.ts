@@ -300,6 +300,7 @@ export async function handleEditSalesReceipt(
     Id: string;
     SyncToken: string;
     TxnDate: string;
+    DocNumber?: string;
     PrivateNote?: string;
     DepositToAccountRef?: { value: string; name?: string };
     DepartmentRef?: { value: string; name?: string };
@@ -336,6 +337,7 @@ export async function handleEditSalesReceipt(
     // Full update: explicitly set sparse=false (node-quickbooks defaults to true)
     updated.sparse = false;
     updated.TxnDate = current.TxnDate;
+    updated.DocNumber = current.DocNumber;
     updated.PrivateNote = current.PrivateNote;
     if (current.DepositToAccountRef) {
       updated.DepositToAccountRef = current.DepositToAccountRef;

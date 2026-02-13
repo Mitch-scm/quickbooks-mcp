@@ -361,6 +361,7 @@ export async function handleEditInvoice(
     SyncToken: string;
     TxnDate: string;
     DueDate?: string;
+    DocNumber?: string;
     PrivateNote?: string;
     CustomerRef?: { value: string; name?: string };
     DepartmentRef?: { value: string; name?: string };
@@ -400,6 +401,7 @@ export async function handleEditInvoice(
     updated.sparse = false;
     updated.TxnDate = current.TxnDate;
     updated.DueDate = current.DueDate;
+    updated.DocNumber = current.DocNumber;
     updated.PrivateNote = current.PrivateNote;
     if (current.CustomerRef) {
       updated.CustomerRef = current.CustomerRef;

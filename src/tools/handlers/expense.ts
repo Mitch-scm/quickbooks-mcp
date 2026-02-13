@@ -326,6 +326,7 @@ export async function handleEditExpense(
     SyncToken: string;
     TxnDate: string;
     PaymentType: string;
+    DocNumber?: string;
     PrivateNote?: string;
     AccountRef?: { value: string; name?: string };
     EntityRef?: { value: string; name?: string; type?: string };
@@ -361,6 +362,7 @@ export async function handleEditExpense(
     // Full update: explicitly set sparse=false (node-quickbooks defaults to true)
     updated.sparse = false;
     updated.TxnDate = current.TxnDate;
+    updated.DocNumber = current.DocNumber;
     updated.PrivateNote = current.PrivateNote;
     if (current.AccountRef) {
       updated.AccountRef = current.AccountRef;

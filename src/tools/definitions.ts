@@ -430,6 +430,14 @@ export const toolDefinitions = [
           type: "string",
           description: "New private memo (optional)",
         },
+        department_name: {
+          type: "string",
+          description: "Header-level department/location name (auto-resolved to ID)",
+        },
+        doc_number: {
+          type: "string",
+          description: "Reference number for the bill (optional)",
+        },
         lines: {
           type: "array",
           description: "Line modifications. Provide line_id to update existing, omit to add new.",

@@ -314,11 +314,13 @@ export async function handleEditBill(
     txn_date?: string;
     due_date?: string;
     memo?: string;
+    department_name?: string;
+    doc_number?: string;
     lines?: BillLineChange[];
     draft?: boolean;
   }
 ): Promise<{ content: Array<{ type: string; text: string }> }> {
-  const { id, vendor_name, txn_date, due_date, memo, lines: lineChanges, draft = true } = args;
+  const { id, vendor_name, txn_date, due_date, memo, department_name, doc_number, lines: lineChanges, draft = true } = args;
 
   // Fetch current Bill
   const current = await promisify<unknown>((cb) =>
@@ -328,7 +330,9 @@ export async function handleEditBill(
     SyncToken: string;
     TxnDate: string;
     DueDate?: string;
+    DocNumber?: string;
     PrivateNote?: string;
+    DepartmentRef?: { value: string; name?: string };
     VendorRef: { value: string; name?: string };
     Line: Array<{
       Id: string;
@@ -367,7 +371,11 @@ export async function handleEditBill(
     updated.sparse = false;
     updated.TxnDate = current.TxnDate;
     updated.DueDate = current.DueDate;
+    updated.DocNumber = current.DocNumber;
     updated.PrivateNote = current.PrivateNote;
+    if (current.DepartmentRef) {
+      updated.DepartmentRef = current.DepartmentRef;
+    }
     // Copy lines and strip read-only fields
     updated.Line = current.Line.map(line => {
       const { LineNum, ...rest } = line as Record<string, unknown>;
@@ -378,6 +386,18 @@ export async function handleEditBill(
   if (txn_date !== undefined) updated.TxnDate = txn_date;
   if (due_date !== undefined) updated.DueDate = due_date;
   if (memo !== undefined) updated.PrivateNote = memo;
+  if (doc_number !== undefined) updated.DocNumber = doc_number;
+
+  // Resolve department if changing
+  if (department_name !== undefined) {
+    const deptCache = await getDepartmentCache(client);
+    let match = deptCache.byName.get(department_name.toLowerCase());
+    if (!match) match = deptCache.items.find(d =>
+      d.FullyQualifiedName?.toLowerCase().includes(department_name.toLowerCase())
+    );
+    if (!match) throw new Error(`Department not found: "${department_name}"`);
+    updated.DepartmentRef = { value: match.Id, name: match.FullyQualifiedName || match.Name };
+  }
 
   // Process line changes if provided
   // Use updated.Line if available (for full updates with stripped read-only fields), else current.Line
@@ -463,6 +483,8 @@ export async function handleEditBill(
     if (txn_date !== undefined) previewLines.push(`  Date: ${current.TxnDate} → ${txn_date}`);
     if (due_date !== undefined) previewLines.push(`  Due Date: ${current.DueDate || '(none)'} → ${due_date}`);
     if (memo !== undefined) previewLines.push(`  Memo: ${current.PrivateNote || '(none)'} → ${memo}`);
+    if (doc_number !== undefined) previewLines.push(`  Ref no.: ${current.DocNumber || '(none)'} → ${doc_number}`);
+    if (department_name !== undefined) previewLines.push(`  Department: ${current.DepartmentRef?.name || '(none)'} → ${(updated.DepartmentRef as { name?: string })?.name || department_name}`);
 
     if (updated.Line) {
       previewLines.push('');
