@@ -303,6 +303,8 @@ QBO_INLINE_OUTPUT=true
 | `get_balance_sheet` | Balance Sheet report |
 | `get_trial_balance` | Trial Balance report |
 | `get_profit_loss_detail` | Detailed P&L with individual transactions (date, payee, amount, memo) |
+| `get_transaction_list` | Flat list of all transactions — filterable by department, account, type. Covers P&L and balance sheet |
+| `get_general_ledger_detail` | Transaction-level detail organized by account — filterable by department. Covers P&L and balance sheet |
 | `query_account_transactions` | All transactions affecting a specific account |
 | `account_period_summary` | Period summary for an account (opening/closing balance, debits, credits, count) |
 | **Journal Entries** | |

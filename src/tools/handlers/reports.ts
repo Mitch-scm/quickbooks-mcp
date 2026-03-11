@@ -1,4 +1,4 @@
-// Handlers for report tools (profit_loss, balance_sheet, trial_balance, profit_loss_detail)
+// Handlers for report tools (profit_loss, balance_sheet, trial_balance, profit_loss_detail, transaction_list, general_ledger_detail)
 
 import QuickBooks from "node-quickbooks";
 import { promisify, resolveDepartmentId } from "../../client/index.js";
@@ -109,4 +109,60 @@ export async function handleGetProfitLossDetail(
 
   const summary = extractReportSummary(result, "Profit and Loss Detail");
   return outputReport("profit-loss-detail", result, summary);
+}
+
+export async function handleGetTransactionList(
+  client: QuickBooks,
+  args: {
+    start_date?: string;
+    end_date?: string;
+    department?: string;
+    account?: string;
+    transaction_type?: string;
+    accounting_method?: string;
+  }
+): Promise<{ content: Array<{ type: string; text: string }> }> {
+  const { start_date, end_date, department, account, transaction_type, accounting_method } = args;
+
+  const options: Record<string, string> = {};
+  if (start_date) options.start_date = start_date;
+  if (end_date) options.end_date = end_date;
+  if (department) options.department = await resolveDepartmentId(client, department);
+  if (account) options.account = account;
+  if (transaction_type) options.transaction_type = transaction_type;
+  if (accounting_method) options.accounting_method = accounting_method;
+
+  const result = await promisify<unknown>((cb) =>
+    client.reportTransactionList(options, cb)
+  ) as QBReport;
+
+  const summary = extractReportSummary(result, "Transaction List");
+  return outputReport("transaction-list", result, summary);
+}
+
+export async function handleGetGeneralLedgerDetail(
+  client: QuickBooks,
+  args: {
+    start_date?: string;
+    end_date?: string;
+    department?: string;
+    account?: string;
+    accounting_method?: string;
+  }
+): Promise<{ content: Array<{ type: string; text: string }> }> {
+  const { start_date, end_date, department, account, accounting_method } = args;
+
+  const options: Record<string, string> = {};
+  if (start_date) options.start_date = start_date;
+  if (end_date) options.end_date = end_date;
+  if (department) options.department = await resolveDepartmentId(client, department);
+  if (account) options.account = account;
+  if (accounting_method) options.accounting_method = accounting_method;
+
+  const result = await promisify<unknown>((cb) =>
+    client.reportGeneralLedgerDetail(options, cb)
+  ) as QBReport;
+
+  const summary = extractReportSummary(result, "General Ledger Detail");
+  return outputReport("general-ledger-detail", result, summary);
 }

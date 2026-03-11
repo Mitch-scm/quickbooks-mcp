@@ -168,6 +168,70 @@ export const toolDefinitions = [
     },
   },
   {
+    name: "get_transaction_list",
+    description: "Get a Transaction List report — a flat list of all transactions in a date range. Can filter by department/location, account, and transaction type. Returns transaction-level detail (date, type, account, amount, memo, split) across ALL account types (P&L and balance sheet). Ideal for pulling all transactions for a department.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        start_date: {
+          type: "string",
+          description: "Start date in YYYY-MM-DD format",
+        },
+        end_date: {
+          type: "string",
+          description: "End date in YYYY-MM-DD format",
+        },
+        department: {
+          type: "string",
+          description: "Filter to a specific department/location ID or name",
+        },
+        account: {
+          type: "string",
+          description: "Filter to a specific account name or ID",
+        },
+        transaction_type: {
+          type: "string",
+          description: "Filter by transaction type (e.g., 'Purchase', 'Deposit', 'JournalEntry')",
+        },
+        accounting_method: {
+          type: "string",
+          description: "Accounting method: 'Accrual' (default) or 'Cash'",
+        },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "get_general_ledger_detail",
+    description: "Get a General Ledger Detail report — transaction-level detail organized by account. Can filter by department/location and account. Covers ALL account types (P&L and balance sheet). Useful for reconciliation and seeing how each account's balance was built up.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        start_date: {
+          type: "string",
+          description: "Start date in YYYY-MM-DD format",
+        },
+        end_date: {
+          type: "string",
+          description: "End date in YYYY-MM-DD format",
+        },
+        department: {
+          type: "string",
+          description: "Filter to a specific department/location ID or name",
+        },
+        account: {
+          type: "string",
+          description: "Filter to a specific account name or ID",
+        },
+        accounting_method: {
+          type: "string",
+          description: "Accounting method: 'Accrual' (default) or 'Cash'",
+        },
+      },
+      required: [],
+    },
+  },
+  {
     name: "query_account_transactions",
     description: "Query all transactions affecting a specific account. Searches across JournalEntry, Purchase, Deposit, SalesReceipt, Bill, Invoice, and Payment. Returns consolidated list with date, type, amount (debit/credit), and description. Useful for investigating account balance discrepancies.",
     inputSchema: {
