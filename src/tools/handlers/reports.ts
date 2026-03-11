@@ -1,4 +1,4 @@
-// Handlers for report tools (profit_loss, balance_sheet, trial_balance)
+// Handlers for report tools (profit_loss, balance_sheet, trial_balance, profit_loss_detail)
 
 import QuickBooks from "node-quickbooks";
 import { promisify, resolveDepartmentId } from "../../client/index.js";
@@ -84,4 +84,29 @@ export async function handleGetTrialBalance(
 
   const summary = extractReportSummary(result, "Trial Balance");
   return outputReport("trial-balance", result, summary);
+}
+
+export async function handleGetProfitLossDetail(
+  client: QuickBooks,
+  args: {
+    start_date?: string;
+    end_date?: string;
+    department?: string;
+    accounting_method?: string;
+  }
+): Promise<{ content: Array<{ type: string; text: string }> }> {
+  const { start_date, end_date, department, accounting_method } = args;
+
+  const options: Record<string, string> = {};
+  if (start_date) options.start_date = start_date;
+  if (end_date) options.end_date = end_date;
+  if (department) options.department = await resolveDepartmentId(client, department);
+  if (accounting_method) options.accounting_method = accounting_method;
+
+  const result = await promisify<unknown>((cb) =>
+    client.reportProfitAndLossDetail(options, cb)
+  ) as QBReport;
+
+  const summary = extractReportSummary(result, "Profit and Loss Detail");
+  return outputReport("profit-loss-detail", result, summary);
 }

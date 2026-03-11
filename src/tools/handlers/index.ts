@@ -7,6 +7,7 @@ export {
   handleGetProfitLoss,
   handleGetBalanceSheet,
   handleGetTrialBalance,
+  handleGetProfitLossDetail,
 } from './reports.js';
 export { handleQueryAccountTransactions } from './account-transactions.js';
 export { handleAccountPeriodSummary } from './account-period-summary.js';

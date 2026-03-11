@@ -142,6 +142,32 @@ export const toolDefinitions = [
     },
   },
   {
+    name: "get_profit_loss_detail",
+    description: "Get a detailed Profit and Loss report with individual transactions (date, payee, account, amount, memo). Much faster than querying transactions individually. Can be filtered by department/location.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        start_date: {
+          type: "string",
+          description: "Start date in YYYY-MM-DD format",
+        },
+        end_date: {
+          type: "string",
+          description: "End date in YYYY-MM-DD format",
+        },
+        department: {
+          type: "string",
+          description: "Filter to a specific department/location ID or name",
+        },
+        accounting_method: {
+          type: "string",
+          description: "Accounting method: 'Accrual' (default) or 'Cash'",
+        },
+      },
+      required: [],
+    },
+  },
+  {
     name: "query_account_transactions",
     description: "Query all transactions affecting a specific account. Searches across JournalEntry, Purchase, Deposit, SalesReceipt, Bill, Invoice, and Payment. Returns consolidated list with date, type, amount (debit/credit), and description. Useful for investigating account balance discrepancies.",
     inputSchema: {
