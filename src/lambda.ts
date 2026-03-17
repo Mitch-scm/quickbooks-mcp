@@ -11,6 +11,7 @@ import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/
 import { setOutputMode } from "./utils/output.js";
 import { toolDefinitions, executeTool } from "./tools/index.js";
 import { getAuthConfig, validateToken } from "./auth/token-validator.js";
+import { validateRestApiKey, restListAccounts, restCreateDeposit } from "./rest-api.js";
 
 // Set HTTP output mode at module load (before any handlers run)
 setOutputMode("http");
@@ -78,7 +79,7 @@ const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
   "Access-Control-Allow-Headers":
-    "Content-Type, Authorization, Mcp-Session-Id, Mcp-Protocol-Version",
+    "Content-Type, Authorization, Mcp-Session-Id, Mcp-Protocol-Version, x-api-key",
 };
 
 function getMethodAndPath(event: APIGatewayEvent): { method: string; path: string } {
@@ -331,6 +332,55 @@ export async function handler(event: APIGatewayEvent): Promise<APIGatewayResult>
   if (path === "/token" && method === "POST") {
     return handleToken(event);
   }
+
+  // ── REST API routes (Google Sheets integration) ──────────────────────
+  // Protected by x-api-key header, NOT by Azure AD Bearer token.
+  // QBO credentials stay on this server; Sheets only sends deposit data.
+
+  if (path === "/api/accounts" && method === "GET") {
+    const apiKey = event.headers["x-api-key"] || event.headers["X-Api-Key"];
+    if (!validateRestApiKey(apiKey)) {
+      return {
+        statusCode: 401,
+        headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+        body: JSON.stringify({ error: "Invalid API key" }),
+        isBase64Encoded: false,
+      };
+    }
+    const result = await restListAccounts();
+    return {
+      statusCode: result.statusCode,
+      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      body: result.body,
+      isBase64Encoded: false,
+    };
+  }
+
+  if (path === "/api/deposit" && method === "POST") {
+    const apiKey = event.headers["x-api-key"] || event.headers["X-Api-Key"];
+    if (!validateRestApiKey(apiKey)) {
+      return {
+        statusCode: 401,
+        headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+        body: JSON.stringify({ error: "Invalid API key" }),
+        isBase64Encoded: false,
+      };
+    }
+    let body = event.body || "{}";
+    if (event.isBase64Encoded) {
+      body = Buffer.from(body, "base64").toString("utf-8");
+    }
+    const parsed = JSON.parse(body);
+    const result = await restCreateDeposit(parsed);
+    return {
+      statusCode: result.statusCode,
+      headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+      body: result.body,
+      isBase64Encoded: false,
+    };
+  }
+
+  // ── End REST API routes ──────────────────────────────────────────────
 
   // MCP endpoint paths: /qb/mcp (with custom domain) or the raw path
   // GET → resource metadata, POST → MCP request
