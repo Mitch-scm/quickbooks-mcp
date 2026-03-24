@@ -158,6 +158,7 @@ export async function handleGetGeneralLedgerDetail(
   if (department) options.department = await resolveDepartmentId(client, department);
   if (account) options.account = account;
   if (accounting_method) options.accounting_method = accounting_method;
+  options.columns = "tx_date,txn_type,doc_num,name,memo,split_acc,subt_nat_home_amount,rbal_nat_home_amount,klass_name";
 
   const result = await promisify<unknown>((cb) =>
     client.reportGeneralLedgerDetail(options, cb)
